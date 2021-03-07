@@ -12,6 +12,3 @@ client.sendto(msg_bytes, (serverIP, serverPort)) #
 buff, address = client.recvfrom(20)
 
 print("Number received: " + str(int.from_bytes(buff, byteorder='big'))) 
-
-
-
