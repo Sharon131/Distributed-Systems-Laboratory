@@ -4,3 +4,5 @@ coverage/
 *.png
 *.zip
 *.rar
+.gradle/
+.idea/
