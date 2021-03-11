@@ -19,7 +19,7 @@ public class Server {
         int newUserPort = portNumber + usersPorts.size() + 1;
         // create new thread for that user
         LinkedList<String> newUserQueue = new LinkedList<>();
-        Thread newUserThread = new ServerThread(newUserPort, usersQueues, newUserQueue);
+        Thread newUserThread = new ServerThread(newUserPort, usersQueues, newUserQueue, newUserName);
         usersPorts.put(newUserName, newUserPort);
         usersQueues.put(newUserName, newUserQueue);
         usersThreads.put(newUserName, newUserThread);
@@ -33,14 +33,24 @@ public class Server {
 
     }
 
+    public static void checkUsersThreads() {
+        for (String name: usersThreads.keySet()) {
+            if (!usersThreads.get(name).isAlive()) {
+                usersThreads.remove(name);
+                usersPorts.remove(name);
+                usersQueues.remove(name);
+            }
+        }
+    }
+
     public static void main(String[] args) throws IOException {
 
+        Runtime.getRuntime().addShutdownHook(new ServerCleanUpThread(usersQueues, usersThreads));
         System.out.println("JAVA SERVER");
 
         try {
             // create socket
             serverSocket = new ServerSocket(portNumber);
-//            serverSocket.setSoTimeout(1000);
 
             while(true){
 
@@ -48,7 +58,7 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
 
                 if (clientSocket != null) {
-                    System.out.println("client connected");
+                    System.out.println("Client connected");
 
                     // in & out streams
                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -65,11 +75,13 @@ public class Server {
                     }
                 }
 
+                checkUsersThreads();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         finally{
+
             if (serverSocket != null){
                 serverSocket.close();
             }

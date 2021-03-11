@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
@@ -21,6 +20,7 @@ public class Client {
 
     static ClientReceiveThread receiveThread;
 
+
     public static void connectToServer() throws IOException {
         out.println(userName);
         int newPortNumber = parseInt(in.readLine());
@@ -34,11 +34,13 @@ public class Client {
         }
     }
 
-    public static void messageLoop(PrintWriter out, BufferedReader in) {
+    public static void messageLoop(PrintWriter out) {
         while (true) {
-            String to_send= sc.nextLine();
-            //send to server
-            out.println(userName + ": " + to_send);
+            try {
+                String to_send= sc.nextLine();
+                //send to server
+                out.println(userName + ": " + to_send);
+            } catch (Exception e) {}
         }
     }
 
@@ -64,7 +66,7 @@ public class Client {
                 receiveThread = new ClientReceiveThread(socket, userName);
                 receiveThread.start();
                 System.out.println("Connection established. Now you can write something to other users:");
-                messageLoop(out, in);
+                messageLoop(out);
             } else {
                 System.out.println("Connection failed. Try different user name.");
             }
