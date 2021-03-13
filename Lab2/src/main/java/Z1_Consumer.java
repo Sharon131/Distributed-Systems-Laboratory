@@ -23,6 +23,7 @@ public class Z1_Consumer {
         // queue
         String QUEUE_NAME = "queue1";
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.basicQos(1);
 
         // consumer (handle msg)
         Consumer consumer = new DefaultConsumer(channel) {
@@ -35,14 +36,14 @@ public class Z1_Consumer {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-//                channel.basicAck(envelope.getDeliveryTag(), false);
+                channel.basicAck(envelope.getDeliveryTag(), false);
                 System.out.println("Received: " + message);
             }
         };
 
         // start listening
         System.out.println("Waiting for messages...");
-        channel.basicConsume(QUEUE_NAME, true, consumer);
+        channel.basicConsume(QUEUE_NAME, false  , consumer);
 
         // close
 //        channel.close();

@@ -22,6 +22,5 @@ tasks {
         image = "rabbitmq:3-management-alpine"
         ports("5672:5672", "15672:15672", "4369:4369", "25672:25672")
         clean = true
-//        networks("rabbitmq_go_net")
     }
 }

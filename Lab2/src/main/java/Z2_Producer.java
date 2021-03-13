@@ -20,12 +20,15 @@ public class Z2_Producer {
 
         // exchange
         String EXCHANGE_NAME = "exchange1";
-        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
 
         while (true) {
 
             // read msg
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Enter key routing: ");
+            String key_routing = br.readLine();
+
             System.out.println("Enter message: ");
             String message = br.readLine();
 
@@ -35,7 +38,7 @@ public class Z2_Producer {
             }
 
             // publish
-            channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes("UTF-8"));
+            channel.basicPublish(EXCHANGE_NAME, key_routing, null, message.getBytes("UTF-8"));
             System.out.println("Sent: " + message);
         }
     }
