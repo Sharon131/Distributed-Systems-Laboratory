@@ -19,7 +19,7 @@ public class Server {
         int newUserPort = portNumber + usersPorts.size() + 1;
         // create new thread for that user
         LinkedList<String> newUserQueue = new LinkedList<>();
-        Thread newUserThread = new ServerThread(newUserPort, usersQueues, newUserQueue, newUserName);
+        Thread newUserThread = new ServerThread(newUserPort, usersQueues, newUserQueue, usersPorts, newUserName);
         usersPorts.put(newUserName, newUserPort);
         usersQueues.put(newUserName, newUserQueue);
         usersThreads.put(newUserName, newUserThread);

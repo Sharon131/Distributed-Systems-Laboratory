@@ -2,27 +2,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramSocket;
 import java.net.Socket;
 import java.util.Timer;
 
 public class ClientReceiveThread extends Thread {
 
     String userName;
-    Socket socket;
-    BufferedReader in;
-    PrintWriter out;
+    Socket socketTCP;
+    DatagramSocket socketUDP;
+    BufferedReader inTCP;
+    PrintWriter outTCP;
 
     Timer pingTimer;
     ClientAliveSetter clientAliveSetter;
 
-    public ClientReceiveThread(Socket socket, String userName) throws IOException {
+    public ClientReceiveThread(Socket socket, DatagramSocket socketUDP, String userName) throws IOException {
         this.userName = userName;
-        this.socket = socket;
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.socketTCP = socket;
+        this.socketUDP = socketUDP;
+        this.inTCP = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.outTCP = new PrintWriter(socket.getOutputStream(), true);
 
         this.pingTimer = new Timer();
         this.clientAliveSetter = new ClientAliveSetter();
+    }
+
+    private void checkUDPMessage() {
+        try {
+
+        } catch (Exception e) {}
     }
 
     public void run() {
@@ -31,8 +40,8 @@ public class ClientReceiveThread extends Thread {
         while (true) {
             try {
 
-                if (in.ready()) {
-                    String received = in.readLine();
+                if (inTCP.ready()) {
+                    String received = inTCP.readLine();
 
                     if (received.equals("DISCONNECT")) {
                         System.out.println("Connection with server is lost. Exiting.");
@@ -44,7 +53,7 @@ public class ClientReceiveThread extends Thread {
 
 
                 if (!clientAliveSetter.IsPingSent()){
-                    out.println("PING");
+                    outTCP.println("PING");
                     clientAliveSetter.setPingSent();
                 }
 
