@@ -78,7 +78,6 @@ public class ServerThread extends Thread {
             while (isClientAlive) {
                 checkForMessageFromDesignatedClient(clientSocket);
                 checkForMessagesFromOthers(clientSocket);
-//                checkForMessageFromDesignatedClientUDP();
             }
         } catch (IOException e) {
             e.printStackTrace();
