@@ -2,8 +2,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -11,9 +12,22 @@ public class Server {
 
     static int portNumber = 12345;
     static ServerSocket serverSocket = null;
+    static DatagramSocket socketUDP = null;
     static HashMap<String, LinkedList<String>> usersQueues = new HashMap<>();
     static HashMap<String, Thread> usersThreads = new HashMap<>();
     static HashMap<String, Integer> usersPorts = new HashMap<>();
+
+    public static Socket tryToAcceptANewClient() {
+        Socket clientSocket = null;
+        try {
+            serverSocket.setSoTimeout(100);
+            clientSocket = serverSocket.accept();
+        } catch (SocketTimeoutException e) {}
+        catch (Exception e) {}
+        finally {
+            return clientSocket;
+        }
+    }
 
     public static void createNewUserThread(String newUserName, PrintWriter out) throws IOException {
         int newUserPort = portNumber + usersPorts.size() + 1;
@@ -29,8 +43,24 @@ public class Server {
         out.println(String.valueOf(newUserPort));
     }
 
-    public static void checkForNewUsers() {
+    public static void checkForUDPMessages() {
+        try {
+            socketUDP.setSoTimeout(100);
+            byte[] receiveBuffer = new byte[1000];
+            InetAddress address = InetAddress.getByName("localhost");
+            Arrays.fill(receiveBuffer, (byte)0);
+            DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 
+            socketUDP.receive(receivePacket);
+
+            for (String name: usersPorts.keySet()) {
+                if (!(new String(receiveBuffer, StandardCharsets.UTF_8).startsWith(name))) {
+                    DatagramPacket sendPacket = new DatagramPacket(receiveBuffer, receiveBuffer.length, address, usersPorts.get(name));
+                    socketUDP.send(sendPacket);
+                }
+            }
+
+        } catch (Exception e) {}
     }
 
     public static void checkUsersThreads() {
@@ -51,11 +81,12 @@ public class Server {
         try {
             // create socket
             serverSocket = new ServerSocket(portNumber);
+            socketUDP = new DatagramSocket(portNumber);
 
             while(true){
 
                 // accept client
-                Socket clientSocket = serverSocket.accept();
+                Socket clientSocket = tryToAcceptANewClient();
 
                 if (clientSocket != null) {
                     System.out.println("Client connected");
@@ -74,6 +105,8 @@ public class Server {
                         System.out.println("Could not add user with name: " + newUserName + ". Name is already used.");
                     }
                 }
+
+                checkForUDPMessages();
 
                 checkUsersThreads();
             }

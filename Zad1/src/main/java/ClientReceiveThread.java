@@ -2,8 +2,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Timer;
 
 public class ClientReceiveThread extends Thread {
@@ -28,10 +31,21 @@ public class ClientReceiveThread extends Thread {
         this.clientAliveSetter = new ClientAliveSetter();
     }
 
-    private void checkUDPMessage() {
+    private void checkForUDPMessage() {
         try {
+            socketUDP.setSoTimeout(100);
+            byte[] receiveBuffer = new byte[50];
+            DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
 
+            while (true) {
+                Arrays.fill(receiveBuffer, (byte)0);
+
+                socketUDP.receive(receivePacket);
+
+                System.out.println(new String(receiveBuffer, StandardCharsets.UTF_8));
+            }
         } catch (Exception e) {}
+
     }
 
     public void run() {
@@ -51,6 +65,7 @@ public class ClientReceiveThread extends Thread {
                     }
                 }
 
+                checkForUDPMessage();
 
                 if (!clientAliveSetter.IsPingSent()){
                     outTCP.println("PING");

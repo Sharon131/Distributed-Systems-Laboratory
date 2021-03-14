@@ -41,22 +41,17 @@ public class Client {
 
     public static void handleUDPMessage() throws IOException {
         System.out.println("Write your message to send over UDP.");
-        System.out.println("When it is done, write character 'U' again to end.");
+        System.out.println("When it is done, write string 'UDP' to end message.");
 
-        InetAddress address = InetAddress.getByName("localhost");
+        sc.useDelimiter("\\s*UDP\\s*");
+        InetAddress address = InetAddress.getByName(hostName);
 
-        String line = sc.nextLine();
+        String data = sc.next();
+        byte[] sendBuffer = (userName + ":\r\n" + data).getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, portNumber);
+        socketUDP.send(sendPacket);
 
-        while (!line.equals("U")) {
-
-            byte[] sendBuffer = line.getBytes();
-
-            DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, portNumber);
-            socketUDP.send(sendPacket);
-
-            line = sc.nextLine();
-        }
-
+        System.out.println("Message sent.");
     }
 
     public static void messageLoop(PrintWriter out) {
@@ -67,7 +62,7 @@ public class Client {
 
                 if (to_send.equals("U")) {
                     handleUDPMessage();
-                } else {
+                } else if (!to_send.equals("UDP") && !to_send.equals("")){
                     out.println(userName + ": " + to_send);
                 }
             } catch (Exception e) {}

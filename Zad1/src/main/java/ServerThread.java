@@ -1,10 +1,8 @@
-import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -16,7 +14,6 @@ public class ServerThread extends Thread {
 
     int portNumber;
     ServerSocket serverSocket;
-    DatagramSocket socketUDP;
     String userName;
     HashMap<String, LinkedList<String>> otherQueues;
     HashMap<String, Integer> otherPorts;
@@ -29,7 +26,6 @@ public class ServerThread extends Thread {
                         LinkedList<String> inQueue, HashMap<String, Integer> usersPorts, String userName) throws IOException {
         this.portNumber = portNumber;
         this.serverSocket = new ServerSocket(portNumber);
-        this.socketUDP = new DatagramSocket(portNumber);
         this.userName = userName;
         this.inQueue = inQueue;
         this.otherQueues = otherQueues;
@@ -53,24 +49,6 @@ public class ServerThread extends Thread {
                 }
             }
         }
-    }
-
-    private void checkForMessageFromDesignatedClientUDP() {
-        try {
-            socketUDP.setSoTimeout(100);
-            byte[] receiveBuffer = new byte[20];
-            InetAddress address = InetAddress.getByName("localhost");
-            Arrays.fill(receiveBuffer, (byte)0);
-            DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-
-            socketUDP.receive(receivePacket);
-
-            for (String name: otherPorts.keySet()) {
-                DatagramPacket sendPacket = new DatagramPacket(receiveBuffer, receiveBuffer.length, address, otherPorts.get(name));
-                socketUDP.send(sendPacket);
-            }
-
-        } catch (Exception e) { }
     }
 
     private void checkForMessagesFromOthers(Socket clientSocket) throws IOException {
@@ -100,7 +78,7 @@ public class ServerThread extends Thread {
             while (isClientAlive) {
                 checkForMessageFromDesignatedClient(clientSocket);
                 checkForMessagesFromOthers(clientSocket);
-                checkForMessageFromDesignatedClientUDP();
+//                checkForMessageFromDesignatedClientUDP();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,7 +90,7 @@ public class ServerThread extends Thread {
                     e.printStackTrace();
                 }
             }
-            System.out.println("User " + userName + " disconnected form server.");
+            System.out.println("User " + userName + " disconnected fromm server.");
         }
     }
 }
