@@ -18,10 +18,17 @@ public class Deliverer {
         Channel channel = connection.createChannel();
 
         // exchange
-//        String EXCHANGE_NAME = "exchange1";
-//        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
+        String EXCHANGE_NAME = "exchange1";
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter your company's name: ");
+        String companyName = br.readLine();
+
+        // queue for messages from admin
+        String queueNameAdmin = channel.queueDeclare(companyName, false, true, true, null).getQueue();
+        channel.queueBind(queueNameAdmin, EXCHANGE_NAME, "deliverers");
+
         System.out.println("Enter products you want to handle: ");
         System.out.println("When you finish, enter 'end'");
 
@@ -47,12 +54,26 @@ public class Deliverer {
 
                 String teamName = properties.getReplyTo();
                 channel.basicPublish("", teamName, null, message.getBytes("UTF-8"));
+
+                // send copy to admin
+                AMQP.BasicProperties prop = new AMQP.BasicProperties.Builder().replyTo(companyName).build();
+                channel.basicPublish("", "admin", prop, message.getBytes("UTF-8"));
+            }
+        };
+
+        Consumer adminMessageConsumer = new DefaultConsumer(channel) {
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                String message = new String(body, "UTF-8");
+                System.out.println("Message from admin: " + message);
             }
         };
 
         for (String queueName: queuesNames) {
             channel.basicConsume(queueName, true, consumer);
         }
+
+        channel.basicConsume(queueNameAdmin, true, adminMessageConsumer);
 
         System.out.println("Waiting for messages...");
     }
