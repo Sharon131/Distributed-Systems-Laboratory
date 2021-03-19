@@ -36,7 +36,7 @@ public class Admin {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Configuration done. Now you can enter message you want to send.");
         System.out.println("If you want to send your message to clients, write 'teams:' before you message.");
-        System.out.println("If you want to write to deliveres, write 'deliverers'.");
+        System.out.println("If you want to write to deliverers, write 'deliverers'.");
         System.out.println("If you want to write to all, write 'all'. Example: 'all: Go home.'");
 
         while (true) {
