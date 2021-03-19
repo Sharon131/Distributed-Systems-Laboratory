@@ -7,7 +7,7 @@ if (len(sys.argv) < 2):
     exit(0)
 
 lab_number = str(sys.argv[1])
-print("Lab number: ", sys.argv[1])
+print("Zad number: ", sys.argv[1])
 
 directory = "./Zad" + lab_number + "/src/main/java/"
 
@@ -20,5 +20,8 @@ for filename in os.listdir(directory):
         newZipFile.write(directory + filename, arcname="Pastuła_Magdalena_" + lab_number + "/" + filename)
 
 newZipFile.write("Oświadczenie.txt")
+
+if lab_number == "2":
+    newZipFile.write("./Zad2/zad2_schematic.jpg", arcname="schematic.jpg")
 
 newZipFile.close()

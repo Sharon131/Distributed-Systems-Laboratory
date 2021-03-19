@@ -56,7 +56,7 @@ public class Team {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String message = new String(body, "UTF-8");
-                System.out.println("Received: " + message);
+                System.out.println("Received acknowledgement for: " + message);
             }
         };
 

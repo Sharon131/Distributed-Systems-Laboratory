@@ -50,14 +50,17 @@ public class Deliverer {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String message = new String(body, "UTF-8");
-                System.out.println("Received: " + message);
-
                 String teamName = properties.getReplyTo();
+
+                System.out.println("Received from " + teamName + ": " + message);
+
                 channel.basicPublish("", teamName, null, message.getBytes("UTF-8"));
 
                 // send copy to admin
                 AMQP.BasicProperties prop = new AMQP.BasicProperties.Builder().replyTo(companyName).build();
                 channel.basicPublish("", "admin", prop, message.getBytes("UTF-8"));
+
+                System.out.println("Send acknowledgement to " + teamName);
             }
         };
 
