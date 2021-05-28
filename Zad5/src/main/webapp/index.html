@@ -1,0 +1,22 @@
+<html>
+<body>
+    <h1>Historical currency info</h1>
+
+    Entered currencies names should be compatible with standard ISO 4217, for example: GBP-Pound sterling, EUR-Euro, CAD-Canadian dollar.<br>
+    You can enter multiple target currencies, but they should be separated by a comma.<br>
+    Entered date should be in format YYYY-MM-DD, for example: 2021-05-21.
+    <form action="/api/info" method="post">
+        <p>
+            From : <input type="text" name="base" />
+        </p>
+        <p>
+            To : <input type="text" name="symbols" />
+        </p>
+        <p>
+            Day : <input type="text" name="date" />
+        </p>
+        <input type="submit" value="Check" />
+    </form>
+
+</body>
+</html>
