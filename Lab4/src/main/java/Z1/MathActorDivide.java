@@ -30,12 +30,12 @@ public class MathActorDivide extends AbstractBehavior<MathActor.MathCommandDivid
     }
 
     private Behavior<MathActor.MathCommandDivide> onMathCommandDivide(MathActor.MathCommandDivide mathCommandDivide) {
-        System.out.println("actorDivide: received command: divide");
+//        System.out.println("actorDivide: received command: divide");
         int result = mathCommandDivide.firstNumber / mathCommandDivide.secondNumber;
         operationCount++;
-        System.out.println("actorDivide: divide result = " + result);
+//        System.out.println("actorDivide: divide result = " + result);
         System.out.println("actorDivide: operation count = " + operationCount);
-        System.out.println("actorDivide: sending response");
+//        System.out.println("actorDivide: sending response");
         mathCommandDivide.replyTo.tell(new MathActor.MathCommandResult(result));
         return this;
     }
