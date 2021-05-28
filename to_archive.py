@@ -24,4 +24,10 @@ newZipFile.write("Oświadczenie.txt")
 if lab_number == "2":
     newZipFile.write("./Zad2/zad2_schematic.jpg", arcname="schematic.jpg")
 
+if lab_number == "4":
+    newZipFile.write("./Zad4/akka_schematic.png", arcname="schematic.png")
+
+if lab_number =="5":
+    newZipFile.write("./Zad5/src/main/webapp/index.html", arcname="Pastuła_Magdalena_" + lab_number + "/" + "index.html")
+
 newZipFile.close()
