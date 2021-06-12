@@ -20,31 +20,17 @@ public class IceServer
 		Communicator communicator = null;
 
 		try	{
-			// 1. Inicjalizacja ICE - utworzenie communicatora
 			communicator = Util.initialize(args);
 
-			// 2. Konfiguracja adaptera
-			// METODA 1 (polecana produkcyjnie): Konfiguracja adaptera Adapter1 jest w pliku konfiguracyjnym podanym jako parametr uruchomienia serwera
-			//ObjectAdapter adapter = communicator.createObjectAdapter("Adapter1");  
-			
-			// METODA 2 (niepolecana, dopuszczalna testowo): Konfiguracja adaptera Adapter1 jest w kodzie Ÿród³owym
-			//ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Adapter1", "tcp -h 127.0.0.2 -p 10000");
-			//ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Adapter1", "tcp -h 127.0.0.2 -p 10000 : udp -h 127.0.0.2 -p 10000");
 			ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Adapter2", "tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z");
-
-			// 3. Stworzenie serwanta/serwantów
-			CalcI2 defaultCalServant = new CalcI2("defaultservant1");
-
-			// 4. Dodanie wpisów do tablicy ASM, skojarzenie nazwy obiektu (Identity) z serwantem
-//			adapter.add(calcServant1, new Identity("calc11", "calc"));
 
 			// servant locator that locates servant when needed (one servant - one object)
 			adapter.addServantLocator(new MyServantLocator(), "calc1");
 
 			// default servant object ->  (one servant -> many objects)
+			CalcI defaultCalServant = new CalcI("defaultservant1");
 			adapter.addDefaultServant(defaultCalServant, "calc2");
 	        
-			// 5. Aktywacja adaptera i wejœcie w pêtlê przetwarzania ¿¹dañ
 			adapter.activate();
 			
 			System.out.println("Entering event processing loop...");

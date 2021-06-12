@@ -17,7 +17,7 @@ public class MyServantLocator implements com.zeroc.Ice.ServantLocator {
         if(servant == null)
         {
             System.out.println(current.id.category + "/" + current.id.name + ": creating servant " + "locatorservant" + counter);
-            servant = new CalcI1("locatorservant" + counter);
+            servant = new CalcI("locatorservant" + counter);
             counter++;
             current.adapter.add(servant, current.id);
         }

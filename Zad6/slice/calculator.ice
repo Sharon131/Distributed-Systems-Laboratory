@@ -23,8 +23,8 @@ module Demo
     void op(A a1, short b1); //za³ó¿my, ¿e to te¿ jest operacja arytmetyczna ;)
   };
 
-  interface Calc1 extends Calc { }
-  interface Calc2 extends Calc { }
+  //interface Calc1 extends Calc { }
+  //interface Calc2 extends Calc { }
 };
 
 #endif
