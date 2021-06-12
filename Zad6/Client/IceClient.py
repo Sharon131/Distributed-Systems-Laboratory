@@ -3,6 +3,8 @@ import sys
 import traceback
 import Ice
 
+# from calculator_ice import A
+
 if __name__ == '__main__':
     communicator = None
     try:
@@ -18,13 +20,15 @@ if __name__ == '__main__':
                 result = printer.add(7, 8)
                 print("RESULT = ", result)
             elif command == 'add2':
-                pass
-            elif command == 'add_list':
-                pass
+                result = printer.add(7000, 8000)
+                print("RESULT = ", result)
             elif command == 'subtract':
-                pass
-            elif command == 'mult':
-                pass
+                result = printer.subtract(7, 8)
+                print("RESULT = ", result)
+            # elif command == 'op':
+            #     a = A(11, 22, 33.0, "ala ma kota")
+            #     printer.op(a, 44)
+            #     print("DONE")
             elif command == 'x':
                 pass
             else:

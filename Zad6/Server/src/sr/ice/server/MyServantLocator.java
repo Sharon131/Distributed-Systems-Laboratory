@@ -12,13 +12,12 @@ public class MyServantLocator implements com.zeroc.Ice.ServantLocator {
     @Override
     synchronized public LocateResult locate(Current current) throws UserException {
         ServantLocator.LocateResult r = new ServantLocator.LocateResult();
-        // Check if we have instantiated a servant already.
-        com.zeroc.Ice.Object servant = current.adapter.find(current.id);
 
-        if(servant == null) // We don't have a servant already
+        com.zeroc.Ice.Object servant = current.adapter.find(current.id);
+        if(servant == null)
         {
-            System.out.println(current.id.category + "/" + current.id.name + ": creating servant " + "fromlocator" + counter);
-            servant = new CalcI1("fromlocator" + counter);
+            System.out.println(current.id.category + "/" + current.id.name + ": creating servant " + "locatorservant" + counter);
+            servant = new CalcI1("locatorservant" + counter);
             counter++;
             current.adapter.add(servant, current.id);
         }

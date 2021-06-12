@@ -33,7 +33,7 @@ public class IceServer
 			ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Adapter2", "tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z");
 
 			// 3. Stworzenie serwanta/serwantów
-			CalcI2 defaultCalServant = new CalcI2("default1");
+			CalcI2 defaultCalServant = new CalcI2("defaultservant1");
 
 			// 4. Dodanie wpisów do tablicy ASM, skojarzenie nazwy obiektu (Identity) z serwantem
 //			adapter.add(calcServant1, new Identity("calc11", "calc"));
