@@ -12,3 +12,7 @@ java -classpath ".\json-20090211.jar;.\build\libs\Zad5-1.0-SNAPSHOT.jar" Applica
 ```
 .\gradlew run
 ```
+
+```
+docker run --rm -p 8000:8000 xd
+```

@@ -14,7 +14,8 @@ public class ContextGET implements HttpHandler {
             try {
                 System.out.println("Get message");
                 Headers headers = exchange.getResponseHeaders();
-                String respText = Files.readString(Path.of("C:\\Users\\pastu\\Documents\\Rozproszone\\Laby\\Zad5\\src\\main\\webapp\\index.html"));
+                String respText = Files.readString(Path.of("/opt/app/src/main/webapp/index.html"));
+//                String respText = Files.readString(Path.of("C:\Users\pastu\Documents\Rozproszone\Laby\Zad5\src\main\webapp\index.html"));
 
                 headers.add("Content-Type", "text/html");
                 exchange.sendResponseHeaders(200, respText.length());
